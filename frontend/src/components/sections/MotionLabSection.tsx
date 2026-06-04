@@ -249,17 +249,36 @@ function MagneticPreview() {
         }
 
         return (
-          <motion.div
-            key={label}
-            style={{ x: sx, y: sy }}
-            onMouseMove={handleMove}
-            onMouseLeave={() => { x.set(0); y.set(0) }}
-            className="px-3 py-1.5 border border-[#C7FF3F]/40 text-[#C7FF3F] cursor-pointer"
-            style={{ x: sx, y: sy, fontSize: '0.6rem', letterSpacing: '0.1em' }}
-            whileHover={{ borderColor: '#C7FF3F', backgroundColor: 'rgba(199,255,63,0.08)' }}
-          >
-            {label}
-          </motion.div>
+          // <motion.div
+          //   key={label}
+          //   style={{ x: sx, y: sy }}
+          //   onMouseMove={handleMove}
+          //   onMouseLeave={() => { x.set(0); y.set(0) }}
+          //   className="px-3 py-1.5 border border-[#C7FF3F]/40 text-[#C7FF3F] cursor-pointer"
+          //   style={{ x: sx, y: sy, fontSize: '0.6rem', letterSpacing: '0.1em' }}
+          //   whileHover={{ borderColor: '#C7FF3F', backgroundColor: 'rgba(199,255,63,0.08)' }}
+          // >
+          //   {label}
+          // </motion.div>
+       <motion.div
+  key={label}
+  onMouseMove={handleMove}
+  onMouseLeave={() => {
+    x.set(0)
+    y.set(0)
+  }}
+  className="px-3 py-1.5 border border-[#C7FF3F]/40 text-[#C7FF3F] cursor-pointer"
+  style={{
+    x: sx,
+    y: sy,
+    fontSize: '0.6rem',
+    letterSpacing: '0.1em',
+  }}
+  whileHover={{
+    borderColor: '#C7FF3F',
+    backgroundColor: 'rgba(199,255,63,0.08)',
+  }}
+></motion.div>
         )
       })}
     </div>

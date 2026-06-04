@@ -15,7 +15,7 @@ import { useMotionStore } from '@/store'
 export function useAdaptiveMotion() {
   const { config, setConfig } = useMotionStore()
   const frames     = useRef<number[]>([])
-  const animId     = useRef<number>()
+const animId = useRef<number | null>(null)
   const downgraded = useRef(false)
   const upgraded   = useRef(false)
 
@@ -59,7 +59,7 @@ export function useAdaptiveMotion() {
 
     animId.current = requestAnimationFrame(tick)
     return () => {
-      if (animId.current) cancelAnimationFrame(animId.current)
+      if (animId.current !== null) cancelAnimationFrame(animId.current)
     }
   }, [config.reducedMotion, setConfig])
 }

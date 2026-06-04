@@ -229,7 +229,7 @@ function AISystemCard({
 // ── Main section ──────────────────────────────────────────────────────────────
 
 export function AILabSection() {
-  const sectionRef              = useRef<HTMLElement>(null)
+ const sectionRef = useRef<HTMLElement | null>(null)
   const isInView                = useInView(sectionRef, { once: true, margin: '-15%' })
   const [activeStep, setActiveStep] = useState(0)
   useSectionReveal(sectionRef)

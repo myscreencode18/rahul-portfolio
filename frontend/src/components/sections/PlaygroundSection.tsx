@@ -9,7 +9,7 @@ import { cn } from '@/utils/cn'
 
 function ShaderExperiment() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const animRef   = useRef<number>()
+ const animRef = useRef<number | null>(null)
   const [active, setActive] = useState(false)
 
   useEffect(() => {
@@ -114,7 +114,7 @@ function TypeDistortExperiment() {
 
 function ParticleFieldExperiment() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const animRef   = useRef<number>()
+  const animRef   = useRef<number | null>(null)
   const mouse     = useRef({ x: -999, y: -999 })
 
   useEffect(() => {
@@ -196,7 +196,7 @@ function ParticleFieldExperiment() {
 
 function GenerativeGridExperiment() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const animRef   = useRef<number>()
+  const animRef   = useRef<number | null>(null)
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -278,7 +278,7 @@ function AsciiExperiment() {
 
 function WaveformExperiment() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const animRef   = useRef<number>()
+  const animRef   = useRef<number | null>(null)
   const mouse     = useRef({ x: 0.5 })
 
   useEffect(() => {

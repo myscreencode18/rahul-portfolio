@@ -5,7 +5,8 @@ import { useMotionStore } from '@/store'
 
 export const BackgroundSystem = memo(function BackgroundSystem() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const animRef   = useRef<number>()
+  // const animRef   = useRef<number>()
+  const animRef = useRef<number | null>(null)
   const config    = useMotionStore((s) => s.config)
 
   useEffect(() => {

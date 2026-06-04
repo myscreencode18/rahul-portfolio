@@ -25,7 +25,7 @@ export function EntrySequence() {
   const overlayRef  = useRef<HTMLDivElement>(null)
   const meshRef     = useRef<HTMLDivElement>(null)
   const nameRef     = useRef<HTMLDivElement>(null)
-  const tl          = useRef<gsap.core.Timeline>()
+ const tl = useRef<gsap.core.Timeline | null>(null)
 
   useEffect(() => {
     if (state.complete) return
@@ -33,14 +33,14 @@ export function EntrySequence() {
     tl.current = gsap.timeline()
 
     // Phase 1 — boot logs
-    BOOT_SEQUENCE.forEach(({ id, message, delay }) => {
+    BOOT_SEQUENCE.forEach(({ id, message, delay }, index) => {
       tl.current!.call(
         () => setLogs((prev) => [...prev, message]),
         [],
         delay / 1000
       )
       tl.current!.call(
-        () => setProgress(Math.round(((BOOT_SEQUENCE.indexOf({ id, message, delay }) + 1) / BOOT_SEQUENCE.length) * 70)),
+        () => setProgress(Math.round(((index + 1) / BOOT_SEQUENCE.length) * 70)),
         [],
         delay / 1000
       )
