@@ -31,66 +31,95 @@ export function AIAssistant() {
     if (open) setTimeout(() => inputRef.current?.focus(), 300)
   }, [open])
 
-  const send = async (text: string) => {
-    if (!text.trim() || loading) return
+  // const send = async (text: string) => {
+  //   if (!text.trim() || loading) return
 
-    const userMsg: Message = {
-      id: crypto.randomUUID(),
-      role: 'user',
-      content: text.trim(),
-      timestamp: Date.now(),
-    }
+  //   const userMsg: Message = {
+  //     id: crypto.randomUUID(),
+  //     role: 'user',
+  //     content: text.trim(),
+  //     timestamp: Date.now(),
+  //   }
 
-    setMessages((prev) => [...prev, userMsg])
-    setInput('')
-    setLoading(true)
-    setStreaming('')
+  //   setMessages((prev) => [...prev, userMsg])
+  //   setInput('')
+  //   setLoading(true)
+  //   setStreaming('')
 
-    try {
-      const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          messages: [...messages, userMsg].map(({ role, content }) => ({ role, content })),
-        }),
-      })
+  //   try {
+  //     const res = await fetch('/api/chat', {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({
+  //         messages: [...messages, userMsg].map(({ role, content }) => ({ role, content })),
+  //       }),
+  //     })
 
-      if (!res.ok) throw new Error('API error')
+  //     if (!res.ok) throw new Error('API error')
 
-      const reader  = res.body!.getReader()
-      const decoder = new TextDecoder()
-      let full = ''
+  //     const reader  = res.body!.getReader()
+  //     const decoder = new TextDecoder()
+  //     let full = ''
 
-      while (true) {
-        const { done, value } = await reader.read()
-        if (done) break
-        const chunk = decoder.decode(value)
+  //     while (true) {
+  //       const { done, value } = await reader.read()
+  //       if (done) break
+  //       const chunk = decoder.decode(value)
 
-        for (const line of chunk.split('\n')) {
-          if (!line.startsWith('data: ')) continue
-          const data = line.slice(6)
-          if (data === '[DONE]') break
-          try {
-            const { text } = JSON.parse(data)
-            if (text) { full += text; setStreaming(full) }
-          } catch { /* skip */ }
-        }
-      }
+  //       for (const line of chunk.split('\n')) {
+  //         if (!line.startsWith('data: ')) continue
+  //         const data = line.slice(6)
+  //         if (data === '[DONE]') break
+  //         try {
+  //           const { text } = JSON.parse(data)
+  //           if (text) { full += text; setStreaming(full) }
+  //         } catch { /* skip */ }
+  //       }
+  //     }
 
-      setMessages((prev) => [
-        ...prev,
-        { id: crypto.randomUUID(), role: 'assistant', content: full, timestamp: Date.now() },
-      ])
-    } catch {
-      setMessages((prev) => [
-        ...prev,
-        { id: crypto.randomUUID(), role: 'assistant', content: 'AI system temporarily offline. Try again shortly.', timestamp: Date.now() },
-      ])
-    } finally {
-      setLoading(false)
-      setStreaming('')
-    }
+  //     setMessages((prev) => [
+  //       ...prev,
+  //       { id: crypto.randomUUID(), role: 'assistant', content: full, timestamp: Date.now() },
+  //     ])
+  //   } catch {
+  //     setMessages((prev) => [
+  //       ...prev,
+  //       { id: crypto.randomUUID(), role: 'assistant', content: 'AI system temporarily offline. Try again shortly.', timestamp: Date.now() },
+  //     ])
+  //   } finally {
+  //     setLoading(false)
+  //     setStreaming('')
+  //   }
+  // }
+const send = async (text: string) => {
+  if (!text.trim() || loading) return
+
+  const userMsg: Message = {
+    id: crypto.randomUUID(),
+    role: 'user',
+    content: text.trim(),
+    timestamp: Date.now(),
   }
+
+  setMessages((prev) => [...prev, userMsg])
+  setInput('')
+  setLoading(true)
+
+  // Simulate thinking delay then show coming soon
+  await new Promise((r) => setTimeout(r, 800))
+
+  setMessages((prev) => [
+    ...prev,
+    {
+      id: crypto.randomUUID(),
+      role: 'assistant',
+      content: 'AI assistant is coming soon. For now, reach out directly via the contact form below — I respond within 24 hours.',
+      timestamp: Date.now(),
+    },
+  ])
+  setLoading(false)
+}
+
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -163,20 +192,37 @@ export function AIAssistant() {
               {/* Messages */}
               <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0">
                 {messages.length === 0 ? (
-                  <div>
-                    <p className="text-system text-[--text-muted] mb-4">QUICK START</p>
-                    <div className="space-y-2">
-                      {SUGGESTED.map((s) => (
-                        <button
-                          key={s}
-                          onClick={() => send(s)}
-                          className="w-full text-left text-system text-[--text-secondary] px-3 py-2.5 border border-[--border] hover:border-[--border-accent] hover:text-[--accent-lime] transition-all duration-200"
-                        >
-                          {s}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
+  <div>
+    {/* Coming soon banner */}
+    <div className="border border-[--border] p-4 mb-4">
+      <div className="flex items-center gap-2 mb-2">
+        <motion.div
+          animate={{ opacity: [1, 0.3, 1] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          className="w-1.5 h-1.5 rounded-full bg-[--accent-cyan]"
+        />
+        <span className="text-system text-[--accent-cyan]">COMING SOON</span>
+      </div>
+      <p className="text-system text-[--text-muted] leading-relaxed">
+        AI assistant is being configured. You can still send a message — I'll reply directly.
+      </p>
+    </div>
+
+    {/* Still show suggested questions — they'll get the fallback reply */}
+    <p className="text-system text-[--text-muted] mb-3">TRY ASKING</p>
+    <div className="space-y-2">
+      {SUGGESTED.map((s) => (
+        <button
+          key={s}
+          onClick={() => send(s)}
+          className="w-full text-left text-system text-[--text-secondary] px-3 py-2.5 border border-[--border] hover:border-[--border-accent] hover:text-[--accent-lime] transition-all duration-200"
+        >
+          {s}
+        </button>
+      ))}
+    </div>
+  </div>
+                    
                 ) : (
                   messages.map((msg) => (
                     <div
@@ -261,3 +307,17 @@ export function AIAssistant() {
     </>
   )
 }
+
+// {messages.length === 0 ? (
+//                   <div>
+//                     <p className="text-system text-[--text-muted] mb-4">QUICK START</p>
+//                     <div className="space-y-2">
+//                       {SUGGESTED.map((s) => (
+//                         <button
+//                           key={s}
+//                           onClick={() => send(s)}
+//                           className="w-full text-left text-system text-[--text-secondary] px-3 py-2.5 border border-[--border] hover:border-[--border-accent] hover:text-[--accent-lime] transition-all duration-200"
+//                         >
+//                           {s}
+//                         </button>
+//                       ))}
